@@ -4,6 +4,7 @@
 import type { Continent, ContinentId } from '../engine/types';
 import { CONTINENT_IDS, powerScore } from '../engine/types';
 import { CHARACTERS, cname, fmt, type Lang, type Strings } from '../i18n';
+import { PORTRAITS } from '../portraits';
 
 const MEDALS = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣', '6️⃣', '7️⃣'];
 
@@ -23,7 +24,7 @@ export default function Rankings({
 
   return (
     <div className="glass rounded-2xl p-3">
-      <h2 className="mb-3 px-1 text-sm font-bold tracking-wide text-white/90">{t['ranks.title']}</h2>
+      <h2 className="mb-3 px-1 text-[15px] font-bold tracking-wide text-white">{t['ranks.title']}</h2>
       <div className="space-y-2">
         {ranked.map((id, i) => {
           const c = continents[id];
@@ -32,17 +33,21 @@ export default function Rankings({
             <button
               key={id}
               onClick={() => onSelect(id)}
-              className="w-full rounded-xl bg-white/5 p-2.5 text-left transition active:scale-[0.99] rtl:text-right"
+              className="w-full rounded-xl bg-black/40 p-3 text-left transition active:scale-[0.99] rtl:text-right"
             >
-              <div className="mb-1 flex items-center justify-between text-[13px]">
-                <span className="font-semibold text-white">
-                  {MEDALS[i]} {CHARACTERS[id].emoji} {cname(id, lang)}
-                  <span className="ms-1.5 text-[11px] font-normal text-white/60">{CHARACTERS[id][lang].title}</span>
-                  {c.atWarWith.length > 0 && <span className="ms-1 text-red-400">⚔️</span>}
+              <div className="mb-1.5 flex items-center justify-between gap-2 text-[14.5px]">
+                <span className="flex min-w-0 items-center gap-2 font-semibold text-white">
+                  <span className="shrink-0">{MEDALS[i]}</span>
+                  <img src={PORTRAITS[id]} alt="" className="h-9 w-9 shrink-0 rounded-full border object-cover" style={{ borderColor: CHARACTERS[id].color }} />
+                  <span className="truncate">
+                    {cname(id, lang)}
+                    <span className="ms-1.5 text-[12px] font-normal text-white/65">{CHARACTERS[id][lang].title}</span>
+                    {c.atWarWith.length > 0 && <span className="ms-1 text-red-400">⚔️</span>}
+                  </span>
                 </span>
-                <span className="font-mono text-white/70">{fmt(score, lang)}</span>
+                <span className="shrink-0 font-mono font-bold text-white/85">{fmt(score, lang)}</span>
               </div>
-              <div className="h-1.5 overflow-hidden rounded-full bg-white/10">
+              <div className="h-2 overflow-hidden rounded-full bg-white/15">
                 <div
                   className="h-full rounded-full"
                   style={{
@@ -52,7 +57,7 @@ export default function Rankings({
                   }}
                 />
               </div>
-              <div className="mt-1 flex gap-3 font-mono text-[10px] text-white/60">
+              <div className="mt-1.5 flex gap-3.5 font-mono text-[11.5px] text-white/75">
                 <span>💰{fmt(c.stats.economy, lang)}</span>
                 <span>⚔️{fmt(c.stats.military, lang)}</span>
                 <span>🔬{fmt(c.stats.technology, lang)}</span>

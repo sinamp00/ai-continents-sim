@@ -239,6 +239,24 @@ const TPL: Record<string, { fa: string; en: string }> = {
     en: 'The world has just awakened. Every eye is on us — we must find our place before others decide it for us.',
     fa: 'جهان تازه بیدار شده. همه‌ی چشم‌ها به ماست — باید جایگاهمان را پیدا کنیم، پیش از آن‌که دیگران برایمان تصمیم بگیرند.',
   },
+
+  // ---- god-mode interventions ----
+  'god.sanction': {
+    en: '⚡ Divine sanctions strike {a}! Its economy crumbles under the wrath from above.',
+    fa: '⚡ تحریم‌های الهی بر {a} فرود آمد! اقتصادش زیر خشم آسمان فرو ریخت.',
+  },
+  'god.aid': {
+    en: '💰 Manna from heaven! {a} receives divine aid — prosperity blooms.',
+    fa: '💰 روزی آسمانی! {a} کمک الهی دریافت کرد — شکوفایی همه‌جا را گرفت.',
+  },
+  'god.provoke': {
+    en: '⚔️ The gods whisper poison: {a} declares war on {b}!',
+    fa: '⚔️ خدایان زهر در گوش‌ها ریختند: {a} به {b} اعلان جنگ کرد!',
+  },
+  'god.peace': {
+    en: '🕊️ By divine decree, all wars of {a} come to an end.',
+    fa: '🕊️ به فرمان الهی، همه‌ی جنگ‌های {a} پایان یافت.',
+  },
 };
 
 export function m(lang: Lang, key: string, vars: Vars = {}): string {

@@ -9,16 +9,18 @@
 import type {
   ActionType,
   AgentDecision,
+  CinematicEvent,
   Continent,
   ContinentId,
   FeedEvent,
   GameState,
+  HistorySnapshot,
   MoodId,
   Organization,
   TimelineEntry,
   Treaty,
 } from './types';
-import { CONTINENT_IDS, clamp100, clampRel } from './types';
+import { CONTINENT_IDS, clamp100, clampRel, powerScore } from './types';
 import { createInitialContinents } from './data';
 import { makeFeedEvent, maybeWorldEvent } from './events';
 import { m, names } from './messages';
@@ -63,6 +65,8 @@ export function createInitialState(lang: Lang = 'fa'): GameState {
     llmStatus: 'ok',
     selectedContinent: 'asia',
     lastDecisions: [],
+    cinematic: [],
+    history: [],
   };
 }
 
@@ -92,6 +96,20 @@ interface TurnLog {
   timeline: TimelineEntry[];
   organizations: Organization[];
   treaties: Treaty[];
+  cinematic: CinematicEvent[];
+}
+
+function pushCinematic(
+  log: TurnLog,
+  kind: CinematicEvent['kind'],
+  a: ContinentId,
+  b: ContinentId | undefined,
+  title: string,
+  text: string,
+  major: boolean,
+  big = false,
+) {
+  log.cinematic.push({ id: uid('c'), kind, a, b, title, text, major, big });
 }
 
 function pushMajor(
@@ -191,6 +209,7 @@ function applyDecision(
       c.stats.military = clamp100(c.stats.military + rnd(1, 3));
       t.stats.military = clamp100(t.stats.military + rnd(1, 3));
       pushMajor(log, turn, year, 'alliance', m(lang, 'alliance.title'), m(lang, 'alliance.desc', { a: A, b: B }), [c.id, t.id]);
+      pushCinematic(log, 'alliance', c.id, t.id, m(lang, 'alliance.title'), m(lang, 'alliance.desc', { a: A, b: B }), false);
       break;
     }
     case 'war': {
@@ -205,6 +224,7 @@ function applyDecision(
       c.stats.happiness = clamp100(c.stats.happiness - rnd(4, 9));
       t.stats.happiness = clamp100(t.stats.happiness - rnd(4, 9));
       pushMajor(log, turn, year, 'war', m(lang, 'war.title'), m(lang, 'war.desc', { a: A, b: B }), [c.id, t.id]);
+      pushCinematic(log, 'war', c.id, t.id, m(lang, 'war.title'), m(lang, 'war.desc', { a: A, b: B }), true);
       break;
     }
     case 'peace': {
@@ -215,6 +235,7 @@ function applyDecision(
       c.stats.happiness = clamp100(c.stats.happiness + rnd(3, 7));
       t.stats.happiness = clamp100(t.stats.happiness + rnd(3, 7));
       pushMajor(log, turn, year, 'peace', m(lang, 'peace.title'), m(lang, 'peace.desc', { a: A, b: B }), [c.id, t.id]);
+      pushCinematic(log, 'peace', c.id, t.id, m(lang, 'peace.title'), m(lang, 'peace.desc', { a: A, b: B }), true);
       break;
     }
     case 'treaty': {
@@ -291,6 +312,12 @@ function applyDecision(
         m(lang, 'org.title'),
         m(lang, 'org.desc', { a: A, n: org.name, c: org.members.length }),
         org.members,
+      );
+      pushCinematic(
+        log, 'organization', c.id, undefined,
+        m(lang, 'org.title'),
+        m(lang, 'org.desc', { a: A, n: org.name, c: org.members.length }),
+        true,
       );
       c.activity = m(lang, 'act.found_organization', { n: org.name });
       break;
@@ -482,6 +509,7 @@ export function runTurn(state: GameState, decisions: AgentDecision[], lang: Lang
     timeline: [],
     organizations: [...state.organizations],
     treaties: [...state.treaties],
+    cinematic: [],
   };
   const { turn, year } = state;
 
@@ -489,8 +517,21 @@ export function runTurn(state: GameState, decisions: AgentDecision[], lang: Lang
   const shuffled = [...decisions].sort(() => Math.random() - 0.5);
   for (const d of shuffled) applyDecision(state, continents, log, d, lang);
 
-  // 2. Wars resolve.
+  // 2. Wars resolve — every active war pair clashes visibly this turn.
   resolveWars(continents, log, turn, year, lang);
+  const warPairs = new Set<string>();
+  const freshWars = new Set<string>();
+  for (const ev of log.cinematic) {
+    if (ev.kind === 'war' && ev.b) freshWars.add([ev.a, ev.b].sort().join('|'));
+  }
+  for (const id of CONTINENT_IDS) {
+    for (const w of continents[id].atWarWith) {
+      const key = [id, w].sort().join('|');
+      if (warPairs.has(key)) continue;
+      warPairs.add(key);
+      pushCinematic(log, 'battle', id, w, '', '', false, freshWars.has(key));
+    }
+  }
 
   // 3. Passive world tick.
   worldTick(continents);
@@ -522,6 +563,19 @@ export function runTurn(state: GameState, decisions: AgentDecision[], lang: Lang
   const feed = [...log.feed, ...state.feed].slice(0, 300);
   const timeline = [...state.timeline, ...log.timeline].sort((a, b) => a.turn - b.turn);
 
+  // 6. Timelapse snapshot: powers + active wars this turn.
+  const powers = {} as Record<ContinentId, number>;
+  for (const id of CONTINENT_IDS) powers[id] = powerScore(continents[id]);
+  const history: HistorySnapshot[] = [
+    ...(state.history ?? []),
+    {
+      turn: turn + 1,
+      year: year + 1,
+      powers,
+      wars: [...warPairs].map((k) => k.split('|') as [ContinentId, ContinentId]),
+    },
+  ].slice(-240);
+
   return {
     ...state,
     turn: turn + 1,
@@ -532,5 +586,7 @@ export function runTurn(state: GameState, decisions: AgentDecision[], lang: Lang
     organizations: log.organizations,
     treaties: log.treaties,
     lastDecisions: decisions,
+    cinematic: log.cinematic,
+    history,
   };
 }

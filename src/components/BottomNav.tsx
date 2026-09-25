@@ -22,8 +22,8 @@ export default function BottomNav({ tab, onTab, t }: { tab: Tab; onTab: (t: Tab)
           <button
             key={tb.id}
             onClick={() => onTab(tb.id)}
-            className={`flex flex-col items-center gap-0.5 py-2 text-[10px] font-semibold transition ${
-              tab === tb.id ? 'text-cyan-300' : 'text-white/60'
+            className={`flex flex-col items-center gap-0.5 py-2 text-[11px] font-semibold transition ${
+              tab === tb.id ? 'text-cyan-300' : 'text-white/75'
             }`}
           >
             <span className="text-xl">{tb.icon}</span>

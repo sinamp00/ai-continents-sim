@@ -154,6 +154,28 @@ export interface TimelineEntry {
   kind: FeedKind;
 }
 
+/** A dramatic moment worth showing cinematically (breaking news / battle FX). */
+export interface CinematicEvent {
+  id: string;
+  kind: 'war' | 'peace' | 'alliance' | 'organization' | 'treaty' | 'battle' | 'god';
+  a: ContinentId;
+  b?: ContinentId;
+  title: string;
+  text: string;
+  /** major → breaking-news overlay; minor → map FX only */
+  major: boolean;
+  /** bigger explosion on the map (fresh wars, god strikes) */
+  big?: boolean;
+}
+
+/** One lightweight snapshot per turn for the timelapse player. */
+export interface HistorySnapshot {
+  turn: number;
+  year: number;
+  powers: Record<ContinentId, number>;
+  wars: [ContinentId, ContinentId][];
+}
+
 export interface Organization {
   id: string;
   name: string;
@@ -188,6 +210,10 @@ export interface GameState {
   selectedContinent: ContinentId | null;
   /** decisions of the most recently simulated turn (for inspection) */
   lastDecisions: AgentDecision[];
+  /** dramatic moments of the most recent turn (reset every turn) */
+  cinematic: CinematicEvent[];
+  /** per-turn snapshots for the timelapse player */
+  history: HistorySnapshot[];
 }
 
 export interface SaveSlot {

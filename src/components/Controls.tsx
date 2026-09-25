@@ -17,11 +17,14 @@ interface Props {
   running: boolean;
   speedMs: number;
   thinking: boolean;
+  muted: boolean;
   onToggleRun: () => void;
   onSpeed: (ms: number) => void;
   onAiMode: (m: AiMode) => void;
   onStep: () => void;
   onNew: () => void;
+  onToggleMute: () => void;
+  onGod: () => void;
   saves: SaveSlot[];
   onSave: (name: string) => void;
   onLoad: (name: string) => void;
@@ -42,7 +45,7 @@ export default function Controls(p: Props) {
       <div className="mb-2.5 flex items-center justify-between px-1">
         <div>
           <p className="font-mono text-2xl font-bold text-white">{fmt(p.state.year, p.lang)}</p>
-          <p className="text-[11px] text-white/65">
+          <p className="text-[12px] text-white/70">
             {t['ctrl.turn']} {fmt(p.state.turn, p.lang)}
           </p>
         </div>
@@ -50,7 +53,7 @@ export default function Controls(p: Props) {
           {/* language toggle */}
           <button
             onClick={() => p.onLang(p.lang === 'fa' ? 'en' : 'fa')}
-            className="rounded-full bg-white/10 px-2.5 py-1 text-[10px] font-bold text-white/70 transition active:scale-95"
+            className="rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-bold text-white/80 transition active:scale-95"
             title="Language / زبان"
           >
             {p.lang === 'fa' ? 'فا | EN' : 'EN | فا'}
@@ -71,7 +74,25 @@ export default function Controls(p: Props) {
                 : t['ctrl.aiFallback']
               : t['ctrl.local']}
           </span>
-          {p.thinking && <span className="animate-pulse text-[11px] text-cyan-300">{t['ctrl.thinking']}</span>}
+          {/* sound toggle */}
+          <button
+            onClick={p.onToggleMute}
+            className={`rounded-full px-3 py-1 text-[12px] font-bold transition active:scale-95 ${
+              p.muted ? 'bg-white/10 text-white/60' : 'bg-violet-500/30 text-violet-200'
+            }`}
+            title={p.muted ? t['ctrl.soundOff'] : t['ctrl.soundOn']}
+          >
+            {p.muted ? t['ctrl.soundOff'] : t['ctrl.soundOn']}
+          </button>
+          {/* god mode */}
+          <button
+            onClick={p.onGod}
+            className="rounded-full bg-gradient-to-r from-amber-500/40 to-orange-500/40 px-3 py-1 text-[12px] font-bold text-amber-200 transition active:scale-95"
+            title={t['ctrl.god']}
+          >
+            {t['ctrl.god']}
+          </button>
+          {p.thinking && <span className="animate-pulse text-[12px] text-cyan-300">{t['ctrl.thinking']}</span>}
         </div>
       </div>
 
