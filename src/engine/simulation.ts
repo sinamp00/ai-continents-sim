@@ -21,7 +21,7 @@ import { CONTINENT_IDS, clamp100, clampRel } from './types';
 import { createInitialContinents } from './data';
 import { makeFeedEvent, maybeWorldEvent } from './events';
 import { m, names } from './messages';
-import { cname, govName, type Lang } from '../i18n';
+import { cname, govName, INITIAL_STATEMENTS, type Lang } from '../i18n';
 
 const rnd = (a: number, b: number) => a + Math.random() * (b - a);
 const pick = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
@@ -30,10 +30,15 @@ let idSeq = 0;
 const uid = (p: string) => `${p}-${Date.now().toString(36)}-${idSeq++}`;
 
 export function createInitialState(lang: Lang = 'fa'): GameState {
+  const continents = createInitialContinents();
+  // Bilingual opening statements for the dashboard/diplomacy views.
+  for (const id of CONTINENT_IDS) {
+    continents[id].statement = INITIAL_STATEMENTS[id][lang];
+  }
   return {
     turn: 1,
     year: 2026,
-    continents: createInitialContinents(),
+    continents,
     feed: [
       makeFeedEvent(1, 2026, 'info', m(lang, 'init.feed'), [...CONTINENT_IDS], true),
     ],
@@ -93,11 +98,10 @@ function pushMajor(
   title: string,
   description: string,
   continents: ContinentId[],
-  lang: Lang,
 ) {
   const id = uid('t');
   log.timeline.push({ id, turn, year, title, description, continents, kind });
-  const star = lang === 'fa' ? '⭐' : '⭐';
+  const star = '⭐';
   log.feed.push({ id: uid('e'), turn, year, kind, text: `${star} ${title} — ${description}`, continents, major: true });
 }
 
@@ -171,7 +175,7 @@ function applyDecision(
       bump(c, t, rnd(15, 25));
       c.stats.military = clamp100(c.stats.military + rnd(1, 3));
       t.stats.military = clamp100(t.stats.military + rnd(1, 3));
-      pushMajor(log, turn, year, 'alliance', m(lang, 'alliance.title'), m(lang, 'alliance.desc', { a: A, b: B }), [c.id, t.id], lang);
+      pushMajor(log, turn, year, 'alliance', m(lang, 'alliance.title'), m(lang, 'alliance.desc', { a: A, b: B }), [c.id, t.id]);
       break;
     }
     case 'war': {
@@ -185,7 +189,7 @@ function applyDecision(
       t.relations[c.id] = -100;
       c.stats.happiness = clamp100(c.stats.happiness - rnd(4, 9));
       t.stats.happiness = clamp100(t.stats.happiness - rnd(4, 9));
-      pushMajor(log, turn, year, 'war', m(lang, 'war.title'), m(lang, 'war.desc', { a: A, b: B }), [c.id, t.id], lang);
+      pushMajor(log, turn, year, 'war', m(lang, 'war.title'), m(lang, 'war.desc', { a: A, b: B }), [c.id, t.id]);
       break;
     }
     case 'peace': {
@@ -195,14 +199,14 @@ function applyDecision(
       bump(c, t, rnd(25, 40));
       c.stats.happiness = clamp100(c.stats.happiness + rnd(3, 7));
       t.stats.happiness = clamp100(t.stats.happiness + rnd(3, 7));
-      pushMajor(log, turn, year, 'peace', m(lang, 'peace.title'), m(lang, 'peace.desc', { a: A, b: B }), [c.id, t.id], lang);
+      pushMajor(log, turn, year, 'peace', m(lang, 'peace.title'), m(lang, 'peace.desc', { a: A, b: B }), [c.id, t.id]);
       break;
     }
     case 'treaty': {
       if (!t) break;
       const treaty: Treaty = {
         id: uid('tr'),
-        title: d.detail || `Pact of ${c.name}–${t.name}`,
+        title: d.detail || m(lang, 'treaty.default', { a: cname(c.id, lang), b: cname(t.id, lang) }),
         parties: [c.id, t.id],
         turn,
         year,
@@ -237,7 +241,7 @@ function applyDecision(
         log, turn, year, 'government',
         m(lang, 'gov.title', { a: A }),
         m(lang, 'gov.desc', { a: A, old: govName(old, lang), new: govName(next, lang) }),
-        [c.id], lang,
+        [c.id],
       );
       break;
     }
@@ -245,7 +249,7 @@ function applyDecision(
       const members = [c.id, ...c.alliances.filter((a) => !continents[a].organizations.includes('__x'))];
       const org: Organization = {
         id: uid('org'),
-        name: d.detail || `${c.name} Concordat`,
+        name: d.detail || m(lang, 'org.default', { a: cname(c.id, lang) }),
         founder: c.id,
         members: [...new Set(members)],
         foundedTurn: turn,
@@ -269,7 +273,7 @@ function applyDecision(
         log, turn, year, 'organization',
         m(lang, 'org.title'),
         m(lang, 'org.desc', { a: A, n: org.name, c: org.members.length }),
-        org.members, lang,
+        org.members,
       );
       break;
     }
@@ -343,7 +347,7 @@ function resolveWars(
           log, turn, year, 'peace',
           m(lang, 'capitulate.title', { l: cname(loser.id, lang) }),
           m(lang, 'capitulate.desc', { l: cname(loser.id, lang), w: cname(winner.id, lang) }),
-          [c.id, e.id], lang,
+          [c.id, e.id],
         );
       }
     }

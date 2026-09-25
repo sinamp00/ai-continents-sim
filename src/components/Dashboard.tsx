@@ -25,7 +25,7 @@ function StatBar({ value, color }: { value: number; color: string }) {
 function relColor(r: number): string {
   if (r >= 40) return 'text-emerald-300';
   if (r >= 10) return 'text-lime-300';
-  if (r > -10) return 'text-white/50';
+  if (r > -10) return 'text-white/70';
   if (r > -40) return 'text-orange-300';
   return 'text-red-300';
 }
@@ -65,7 +65,7 @@ export default function Dashboard({
           <p className="text-[12px] font-semibold" style={{ color: ch.color }}>
             {ch[lang].title}
           </p>
-          <p className="text-[11px] text-white/55">
+          <p className="text-[11px] text-white/70">
             {t['dash.government']}: {govName(continent.government, lang)} · ⚡{fmt(powerScore(continent), lang)} {t['dash.power']}
           </p>
         </div>
@@ -112,7 +112,7 @@ export default function Dashboard({
       </div>
 
       {/* relations */}
-      <h3 className="mb-1.5 mt-4 text-xs font-bold uppercase tracking-wider text-white/50">{t['dash.relations']}</h3>
+      <h3 className="mb-1.5 mt-4 text-xs font-bold uppercase tracking-wider text-white/65">{t['dash.relations']}</h3>
       <div className="grid grid-cols-2 gap-1.5">
         {CONTINENT_IDS.filter((id) => id !== continent.id).map((id) => {
           const r = continent.relations[id];

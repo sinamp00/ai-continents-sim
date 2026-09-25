@@ -119,7 +119,7 @@ function decideFor(c: Continent, state: GameState, lang: Lang): AgentDecision {
   // Found organization: cooperative + has allies, and few orgs exist.
   if (t.cooperation > 0.6 && c.alliances.length >= 1 && state.organizations.length < 5 && Math.random() < 0.25) {
     candidates.push({
-      decision: base(c, 'found_organization', undefined, `${A} Concordat`, m(lang, 'reason.org', { a: A })),
+      decision: base(c, 'found_organization', undefined, m(lang, 'org.default', { a: A }), m(lang, 'reason.org', { a: A })),
       score: t.cooperation * 16 + rnd(0, 8),
     });
   }

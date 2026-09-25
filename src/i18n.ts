@@ -48,7 +48,7 @@ export const CHARACTERS: Record<ContinentId, Character> = {
     emoji: '🦉',
     color: '#3b82f6',
     mapX: 55,
-    mapY: 26,
+    mapY: 20,
     fa: {
       name: 'اروپا',
       title: 'دیپلمات کهن',
@@ -64,7 +64,7 @@ export const CHARACTERS: Record<ContinentId, Character> = {
     emoji: '🦁',
     color: '#f59e0b',
     mapX: 57,
-    mapY: 50,
+    mapY: 56,
     fa: {
       name: 'آفریقا',
       title: 'شیر صحرا',
@@ -144,6 +144,38 @@ export const CHARACTERS: Record<ContinentId, Character> = {
 
 /** Localized continent/character name. */
 export const cname = (id: ContinentId, lang: Lang): string => CHARACTERS[id][lang].name;
+
+/** Bilingual opening statements shown on the dashboard/diplomacy before the first turn. */
+export const INITIAL_STATEMENTS: Record<ContinentId, { fa: string; en: string }> = {
+  asia: {
+    fa: '«آسیا دنبال شکوفایی از راه تجارت است، اما هیچ‌وقت ببرِ خفته را دست‌کم نگیر.»',
+    en: '"Asia seeks prosperity through trade, but never underestimate the sleeping tiger."',
+  },
+  europe: {
+    fa: '«اروپا به دیپلماسی و نهادها باور دارد — قدرت نرم بر شمشیر پیروز می‌شود.»',
+    en: '"Europe believes in diplomacy and institutions — soft power beats the sword."',
+  },
+  africa: {
+    fa: '«آفریقا برخاسته است. منابع ما، آینده ما — با احترام بیا، یا اصلاً نیا.»',
+    en: '"Africa is rising. Our resources, our future — come with respect, or not at all."',
+  },
+  north_america: {
+    fa: '«آزادی و نوآوری راه ماست. ما از متحدانمان دفاع می‌کنیم و از هیچ رقیبی نمی‌ترسیم.»',
+    en: '"Freedom and innovation are our way. We defend our allies and fear no rival."',
+  },
+  south_america: {
+    fa: '«آمریکای جنوبی صدای جنوب جهانی است — مستقل، مغرور و تسلیم‌ناپذیر.»',
+    en: '"South America is the voice of the Global South — independent, proud, unbowed."',
+  },
+  oceania: {
+    fa: '«اقیانوسیه نگهبان اقیانوس‌هاست. با طبیعت هماهنگ شو، یا موج تو را می‌برد.»',
+    en: '"Oceania guards the oceans. Move with nature, or the wave takes you."',
+  },
+  antarctica: {
+    fa: '«قطب جنوب نظاره می‌کند. یخ صبور است — و صبر، استراتژی است.»',
+    en: '"Antarctica watches. Ice is patient — and patience is strategy."',
+  },
+};
 
 /** Localized government name. */
 const GOV: Record<string, { fa: string; en: string }> = {

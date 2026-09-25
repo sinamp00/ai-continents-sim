@@ -20,7 +20,7 @@ export default function Timeline({ entries, lang, t }: { entries: TimelineEntry[
             <div className="flex-1 rounded-xl bg-white/5 p-2.5">
               <div className="mb-0.5 flex items-center justify-between">
                 <span className="text-[13px] font-bold text-white">{item.title}</span>
-                <span className="font-mono text-[10px] text-white/45">{fmt(item.year, lang)}</span>
+                <span className="font-mono text-[10px] text-white/60">{fmt(item.year, lang)}</span>
               </div>
               <p className="text-[12px] leading-snug text-white/70">{item.description}</p>
             </div>

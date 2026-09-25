@@ -220,6 +220,10 @@ const TPL: Record<string, { fa: string; en: string }> = {
   },
   'llm.silence': { en: 'The council chose silence this year.', fa: 'شورا امسال سکوت را برگزید.' },
   'llm.watch': { en: '{a} watches the world turn.', fa: '{a} گردش جهان را نظاره می‌کند.' },
+
+  // ---- Default treaty / organization names ----
+  'treaty.default': { en: 'Pact of {a}–{b}', fa: 'پیمان {a}–{b}' },
+  'org.default': { en: '{a} Concordat', fa: 'هم‌پیمانی {a}' },
 };
 
 export function m(lang: Lang, key: string, vars: Vars = {}): string {

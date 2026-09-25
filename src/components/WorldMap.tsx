@@ -23,7 +23,7 @@ export default function WorldMap({ continents, selected, onSelect, lang, t }: Pr
     <div className="glass rounded-2xl p-3">
       <div className="mb-2 flex items-center justify-between px-1">
         <h2 className="text-sm font-bold tracking-wide text-white/90">{t['map.title']}</h2>
-        <span className="text-[11px] text-white/50">{t['map.hint']}</span>
+        <span className="text-[11px] text-white/65">{t['map.hint']}</span>
       </div>
 
       {/* map with character markers (image is exactly 2:1) */}
@@ -41,7 +41,7 @@ export default function WorldMap({ continents, selected, onSelect, lang, t }: Pr
           const strength = score / max;
           const isSelected = selected === id;
           const atWar = c.atWarWith.length > 0;
-          const size = 34 + strength * 14;
+          const size = 30 + strength * 10;
           return (
             <button
               key={id}
@@ -70,7 +70,7 @@ export default function WorldMap({ continents, selected, onSelect, lang, t }: Pr
                 {ch.emoji}
               </span>
               <span
-                className="mt-0.5 whitespace-nowrap rounded-full bg-black/60 px-1.5 py-px text-[9px] font-bold text-white"
+                className="mt-0.5 max-w-[76px] truncate whitespace-nowrap rounded-full bg-black/75 px-1.5 py-px text-[9px] font-bold text-white"
                 style={{ textShadow: '0 1px 3px #000' }}
               >
                 {ch[lang].name} · {fmt(score, lang)}

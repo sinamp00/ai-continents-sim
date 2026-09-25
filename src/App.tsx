@@ -145,7 +145,7 @@ export default function App() {
         <div>
           <h1 className="text-[17px] font-extrabold leading-tight text-white">
             {t['app.title']}
-            <span className="block text-[11px] font-medium text-white/50">{t['app.subtitle']}</span>
+            <span className="block text-[11px] font-medium text-white/65">{t['app.subtitle']}</span>
           </h1>
         </div>
       </header>
@@ -208,7 +208,7 @@ export default function App() {
         />
       )}
 
-      <footer className="mt-6 text-center text-[10px] text-white/30">
+      <footer className="mt-6 text-center text-[10px] text-white/65">
         {t['footer']} · v2.0
       </footer>
 

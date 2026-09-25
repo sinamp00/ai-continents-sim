@@ -37,7 +37,7 @@ export default function Rankings({
               <div className="mb-1 flex items-center justify-between text-[13px]">
                 <span className="font-semibold text-white">
                   {MEDALS[i]} {CHARACTERS[id].emoji} {cname(id, lang)}
-                  <span className="ms-1.5 text-[11px] font-normal text-white/45">{CHARACTERS[id][lang].title}</span>
+                  <span className="ms-1.5 text-[11px] font-normal text-white/60">{CHARACTERS[id][lang].title}</span>
                   {c.atWarWith.length > 0 && <span className="ms-1 text-red-400">⚔️</span>}
                 </span>
                 <span className="font-mono text-white/70">{fmt(score, lang)}</span>
@@ -52,7 +52,7 @@ export default function Rankings({
                   }}
                 />
               </div>
-              <div className="mt-1 flex gap-3 font-mono text-[10px] text-white/45">
+              <div className="mt-1 flex gap-3 font-mono text-[10px] text-white/60">
                 <span>💰{fmt(c.stats.economy, lang)}</span>
                 <span>⚔️{fmt(c.stats.military, lang)}</span>
                 <span>🔬{fmt(c.stats.technology, lang)}</span>

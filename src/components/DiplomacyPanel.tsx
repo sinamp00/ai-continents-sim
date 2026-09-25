@@ -8,11 +8,11 @@ import { CONTINENT_IDS } from '../engine/types';
 import { CHARACTERS, cname, fmt, govName, type Lang, type Strings } from '../i18n';
 
 function cellColor(r: number): string {
-  if (r >= 40) return 'bg-emerald-500/70';
-  if (r >= 10) return 'bg-lime-500/50';
+  if (r >= 40) return 'bg-emerald-600';
+  if (r >= 10) return 'bg-lime-700';
   if (r > -10) return 'bg-white/15';
-  if (r > -40) return 'bg-orange-500/60';
-  return 'bg-red-500/75';
+  if (r > -40) return 'bg-orange-600';
+  return 'bg-red-600';
 }
 
 export default function DiplomacyPanel({
@@ -52,8 +52,8 @@ export default function DiplomacyPanel({
                 <div className="min-w-0">
                   <p className="text-[12px] font-bold text-white">
                     {ch[lang].name}
-                    <span className="ms-1.5 font-normal text-white/45">{ch[lang].title}</span>
-                    <span className="ms-1.5 font-normal capitalize text-white/45">· {govName(c.government, lang)}</span>
+                    <span className="ms-1.5 font-normal text-white/60">{ch[lang].title}</span>
+                    <span className="ms-1.5 font-normal capitalize text-white/60">· {govName(c.government, lang)}</span>
                     {c.atWarWith.length > 0 && <span className="ms-1.5 text-red-400">{t['diplo.atWar']}</span>}
                   </p>
                   <p className="text-[13px] italic leading-snug text-white/75">“{c.statement}”</p>
@@ -119,7 +119,7 @@ export default function DiplomacyPanel({
               <p className="text-white/60">
                 {fmt(o.foundedYear, lang)} · {cname(o.founder, lang)} · {o.members.map((mm) => CHARACTERS[mm].emoji).join(' ')}
               </p>
-              <p className="italic text-white/55">“{o.purpose}”</p>
+              <p className="italic text-white/70">“{o.purpose}”</p>
             </div>
           ))}
           {treaties.slice(-5).reverse().map((tr) => (

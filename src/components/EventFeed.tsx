@@ -44,8 +44,8 @@ export default function EventFeed({ feed, lang, t }: { feed: FeedEvent[]; lang: 
             className={`feed-item rounded-xl border p-2.5 text-[13px] leading-snug ${KIND_STYLE[e.kind]}`}
           >
             <div className="mb-0.5 flex items-center justify-between">
-              <span className="font-mono text-[10px] text-white/45">
-                {fmt(e.year, lang)} · T{fmt(e.turn, lang)}
+              <span className="font-mono text-[10px] text-white/60">
+                {fmt(e.year, lang)} · {t['ctrl.turn']} {fmt(e.turn, lang)}
               </span>
               {e.major && <span className="text-[10px]">⭐</span>}
             </div>

@@ -42,11 +42,11 @@ export default function Controls(p: Props) {
       <div className="mb-2.5 flex items-center justify-between px-1">
         <div>
           <p className="font-mono text-2xl font-bold text-white">{fmt(p.state.year, p.lang)}</p>
-          <p className="text-[11px] text-white/50">
+          <p className="text-[11px] text-white/65">
             {t['ctrl.turn']} {fmt(p.state.turn, p.lang)}
           </p>
         </div>
-        <div className="flex items-center gap-1.5">
+        <div className="flex flex-wrap items-center justify-end gap-1.5">
           {/* language toggle */}
           <button
             onClick={() => p.onLang(p.lang === 'fa' ? 'en' : 'fa')}
@@ -178,7 +178,7 @@ export default function Controls(p: Props) {
             <div key={s.name} className="flex items-center justify-between rounded-lg bg-white/5 px-2.5 py-2 text-[12px]">
               <div className="min-w-0">
                 <p className="truncate font-semibold text-white/90">{s.name}</p>
-                <p className="text-[10px] text-white/45">
+                <p className="text-[10px] text-white/60">
                   {fmt(s.year, p.lang)} · {t['ctrl.turn']} {fmt(s.turn, p.lang)} · {new Date(s.savedAt).toLocaleDateString(p.lang === 'fa' ? 'fa-IR' : 'en-US')}
                 </p>
               </div>
