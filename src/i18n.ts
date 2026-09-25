@@ -7,7 +7,7 @@
  *   emoji avatar, glow color, map marker position, name/title/bio in both
  *   languages.
  */
-import type { ContinentId } from './engine/types';
+import type { ContinentId, MoodId } from './engine/types';
 
 export type Lang = 'fa' | 'en';
 
@@ -191,6 +191,20 @@ const GOV: Record<string, { fa: string; en: string }> = {
 export const govName = (gov: string, lang: Lang): string =>
   GOV[gov]?.[lang] ?? gov;
 
+/** Localized mood: emoji + name. */
+export const MOODS: Record<MoodId, { emoji: string; fa: string; en: string }> = {
+  furious: { emoji: '😠', fa: 'خشمگین', en: 'Furious' },
+  despair: { emoji: '😞', fa: 'نومید', en: 'Despairing' },
+  worried: { emoji: '😟', fa: 'نگران', en: 'Worried' },
+  triumphant: { emoji: '😎', fa: 'پیروزمند', en: 'Triumphant' },
+  confident: { emoji: '😌', fa: 'مطمئن', en: 'Confident' },
+  hopeful: { emoji: '🙂', fa: 'امیدوار', en: 'Hopeful' },
+  scheming: { emoji: '😏', fa: 'نقشه‌کش', en: 'Scheming' },
+  calm: { emoji: '😐', fa: 'آرام', en: 'Calm' },
+};
+export const moodName = (mood: MoodId, lang: Lang): string => MOODS[mood][lang];
+export const moodEmoji = (mood: MoodId): string => MOODS[mood].emoji;
+
 /** Localized number with native digits. */
 export const fmt = (n: number, lang: Lang): string =>
   Math.round(n).toLocaleString(lang === 'fa' ? 'fa-IR' : 'en-US');
@@ -225,6 +239,16 @@ const en = {
   'map.hint': 'tap a character',
   'map.legendWar': '🔴 pulsing = at war',
   'map.legendPower': '✨ glow = power',
+  'map.zoomHint': 'scroll / pinch to zoom · double-tap a character to dive in',
+  'map.reset': 'reset view',
+  'scene.doing': '🎬 Now',
+  'scene.thinking': '💭 Inner voice',
+  'scene.close': 'Close',
+  'scene.zoomIn': 'zoom in for the scene',
+  'cinema.play': '🎬 Cinema mode',
+  'cinema.stop': '⏹ Stop',
+  'cinema.sceneOf': 'Scene',
+  'cinema.of': 'of',
   'feed.title': '📡 EVENT FEED',
   'feed.major': '⭐ Major only',
   'feed.empty': 'No events yet.',
@@ -283,6 +307,16 @@ const fa: Strings = {
   'map.hint': 'یک شخصیت را لمس کن',
   'map.legendWar': '🔴 چشمک‌زن = در جنگ',
   'map.legendPower': '✨ درخشش = قدرت',
+  'map.zoomHint': 'اسکرول / دو انگشت برای زوم · دابل‌تپ روی شخصیت برای نزدیک شدن',
+  'map.reset': 'بازنشانی نما',
+  'scene.doing': '🎬 هم‌اکنون',
+  'scene.thinking': '💭 صدای درون',
+  'scene.close': 'بستن',
+  'scene.zoomIn': 'برای دیدن صحنه زوم کن',
+  'cinema.play': '🎬 حالت سینمایی',
+  'cinema.stop': '⏹ توقف',
+  'cinema.sceneOf': 'صحنه',
+  'cinema.of': 'از',
   'feed.title': '📡 فید رویدادها',
   'feed.major': '⭐ فقط مهم‌ها',
   'feed.empty': 'هنوز رویدادی نیست.',

@@ -54,6 +54,17 @@ export const GOVERNMENTS: GovernmentType[] = [
   'anarchy',
 ];
 
+/** The character's emotional state, derived each turn from their situation. */
+export type MoodId =
+  | 'furious'
+  | 'despair'
+  | 'worried'
+  | 'triumphant'
+  | 'confident'
+  | 'hopeful'
+  | 'scheming'
+  | 'calm';
+
 export interface Continent {
   id: ContinentId;
   name: string;
@@ -75,6 +86,12 @@ export interface Continent {
   organizations: string[];
   /** Latest public diplomatic statement (shown in the diplomacy panel) */
   statement: string;
+  /** What the character is currently DOING (localized, updated each turn) */
+  activity: string;
+  /** The character's inner monologue — latest decision reasoning (localized) */
+  thought: string;
+  /** Current emotional state (localized at render time) */
+  mood: MoodId;
 }
 
 /** Actions an agent may take on its turn. */

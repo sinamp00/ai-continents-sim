@@ -21,7 +21,7 @@ import {
   saveGame,
 } from './engine/persistence';
 import { STRINGS, type Lang } from './i18n';
-import WorldMap from './components/WorldMap';
+import ZoomMap from './components/ZoomMap';
 import EventFeed from './components/EventFeed';
 import Dashboard from './components/Dashboard';
 import Rankings from './components/Rankings';
@@ -181,7 +181,7 @@ export default function App() {
       {/* tab content */}
       {tab === 'map' && (
         <div className="space-y-3">
-          <WorldMap
+          <ZoomMap
             continents={state.continents}
             selected={state.selectedContinent}
             onSelect={(id) => {
@@ -190,6 +190,7 @@ export default function App() {
             }}
             lang={lang}
             t={t}
+            turn={state.turn}
           />
           <Dashboard continent={selected} lang={lang} t={t} />
         </div>

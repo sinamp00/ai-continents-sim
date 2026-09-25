@@ -224,6 +224,21 @@ const TPL: Record<string, { fa: string; en: string }> = {
   // ---- Default treaty / organization names ----
   'treaty.default': { en: 'Pact of {a}–{b}', fa: 'پیمان {a}–{b}' },
   'org.default': { en: '{a} Concordat', fa: 'هم‌پیمانی {a}' },
+
+  // ---- Character activities: what each character is DOING right now ----
+  'act.trade': { en: 'negotiating trade with {b}', fa: 'در حال مذاکره‌ی تجاری با {b}' },
+  'act.alliance': { en: 'cementing the alliance with {b}', fa: 'در حال تحکیم اتحاد با {b}' },
+  'act.war': { en: 'at war with {b} — armies on the move', fa: 'در جنگ با {b} — ارتش‌ها در حرکت‌اند' },
+  'act.peace': { en: 'negotiating peace with {b}', fa: 'در حال مذاکره برای صلح با {b}' },
+  'act.tech_share': { en: 'sharing technology with {b}', fa: 'در حال اشتراک فناوری با {b}' },
+  'act.treaty': { en: 'signing the treaty «{n}» with {b}', fa: 'در حال امضای پیمان «{n}» با {b}' },
+  'act.change_government': { en: 'in transition — becoming {g}', fa: 'در گذار — در حال تبدیل به {g}' },
+  'act.found_organization': { en: 'founding the organization «{n}»', fa: 'در حال تأسیس سازمان «{n}»' },
+  'act.none': { en: 'watching the world turn', fa: 'نظاره‌گر گردش جهان' },
+  'init.thought': {
+    en: 'The world has just awakened. Every eye is on us — we must find our place before others decide it for us.',
+    fa: 'جهان تازه بیدار شده. همه‌ی چشم‌ها به ماست — باید جایگاهمان را پیدا کنیم، پیش از آن‌که دیگران برایمان تصمیم بگیرند.',
+  },
 };
 
 export function m(lang: Lang, key: string, vars: Vars = {}): string {

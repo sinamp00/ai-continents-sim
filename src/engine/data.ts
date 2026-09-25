@@ -17,7 +17,7 @@ function rel(
 }
 
 export function createInitialContinents(): Record<ContinentId, Continent> {
-  return {
+  const out = {
     asia: {
       id: 'asia',
       name: 'Asia',
@@ -131,4 +131,12 @@ export function createInitialContinents(): Record<ContinentId, Continent> {
       statement: 'Antarctica watches. Antarctica researches. Antarctica waits.',
     },
   };
+  // Inner-life fields start neutral; createInitialState() localizes them.
+  for (const c of Object.values(out)) {
+    const cc = c as unknown as Continent;
+    cc.activity = '';
+    cc.thought = '';
+    cc.mood = 'calm';
+  }
+  return out as unknown as Record<ContinentId, Continent>;
 }

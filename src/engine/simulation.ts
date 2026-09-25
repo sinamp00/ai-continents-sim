@@ -13,6 +13,7 @@ import type {
   ContinentId,
   FeedEvent,
   GameState,
+  MoodId,
   Organization,
   TimelineEntry,
   Treaty,
@@ -34,6 +35,9 @@ export function createInitialState(lang: Lang = 'fa'): GameState {
   // Bilingual opening statements for the dashboard/diplomacy views.
   for (const id of CONTINENT_IDS) {
     continents[id].statement = INITIAL_STATEMENTS[id][lang];
+    continents[id].activity = m(lang, 'act.none');
+    continents[id].thought = m(lang, 'init.thought');
+    continents[id].mood = 'calm';
   }
   return {
     turn: 1,
@@ -142,6 +146,17 @@ function applyDecision(
     c.statement = d.statement;
   }
 
+  // The character's inner life: what they're doing + thinking (cinematic scene view).
+  if (d.reasoning) c.thought = d.reasoning;
+  const simpleActs: ActionType[] = ['trade', 'alliance', 'war', 'peace', 'tech_share'];
+  if (d.action === 'none') {
+    c.activity = m(lang, 'act.none');
+  } else if (simpleActs.includes(d.action)) {
+    c.activity = m(lang, `act.${d.action}`, { b: B });
+  }
+  // treaty / change_government / found_organization set their activity
+  // inside their case, once the name is known.
+
   const bump = (a: Continent, b: Continent, n: number) => {
     a.relations[b.id] = clampRel(a.relations[b.id] + n);
     b.relations[a.id] = clampRel(b.relations[a.id] + n);
@@ -225,6 +240,7 @@ function applyDecision(
         continents: [c.id, t.id],
         kind: 'treaty',
       });
+      c.activity = m(lang, 'act.treaty', { n: treaty.title, b: B });
       break;
     }
     case 'change_government': {
@@ -243,6 +259,7 @@ function applyDecision(
         m(lang, 'gov.desc', { a: A, old: govName(old, lang), new: govName(next, lang) }),
         [c.id],
       );
+      c.activity = m(lang, 'act.change_government', { g: govName(next, lang) });
       break;
     }
     case 'found_organization': {
@@ -275,6 +292,7 @@ function applyDecision(
         m(lang, 'org.desc', { a: A, n: org.name, c: org.members.length }),
         org.members,
       );
+      c.activity = m(lang, 'act.found_organization', { n: org.name });
       break;
     }
     case 'none':
@@ -438,6 +456,21 @@ function worldTick(continents: Record<ContinentId, Continent>) {
 /* Public API                                                          */
 /* ------------------------------------------------------------------ */
 
+/** Derive the character's emotional state from their situation. */
+function deriveMood(c: Continent): MoodId {
+  const s = c.stats;
+  if (c.atWarWith.length > 0) {
+    return s.military < 35 || s.happiness < 25 ? 'despair' : 'furious';
+  }
+  if (s.happiness < 25) return 'despair';
+  if (s.economy < 30) return 'worried';
+  if (s.military > 72 && c.traits.aggression > 0.55) return 'scheming';
+  if (c.alliances.length >= 3) return 'confident';
+  if (s.happiness > 70) return 'hopeful';
+  if (s.technology > 75 || s.economy > 80) return 'triumphant';
+  return 'calm';
+}
+
 /**
  * Simulate one full turn from agent decisions.
  * Returns the next GameState (immutable update).
@@ -481,6 +514,9 @@ export function runTurn(state: GameState, decisions: AgentDecision[], lang: Lang
       });
     }
   }
+
+  // 4b. Update every character's emotional state from the new situation.
+  for (const id of CONTINENT_IDS) continents[id].mood = deriveMood(continents[id]);
 
   // 5. Assemble next state (cap feed at 300 entries for memory).
   const feed = [...log.feed, ...state.feed].slice(0, 300);

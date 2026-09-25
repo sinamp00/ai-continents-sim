@@ -4,7 +4,7 @@
  */
 import type { Continent } from '../engine/types';
 import { CONTINENT_IDS, powerScore } from '../engine/types';
-import { CHARACTERS, cname, fmt, govName, type Lang, type Strings } from '../i18n';
+import { CHARACTERS, cname, fmt, govName, moodEmoji, moodName, type Lang, type Strings } from '../i18n';
 
 const STAT_META: { key: keyof Continent['stats']; labelKey: keyof Strings; color: string }[] = [
   { key: 'economy', labelKey: 'stat.economy', color: 'bg-amber-400' },
@@ -67,6 +67,10 @@ export default function Dashboard({
           </p>
           <p className="text-[11px] text-white/70">
             {t['dash.government']}: {govName(continent.government, lang)} · ⚡{fmt(powerScore(continent), lang)} {t['dash.power']}
+          </p>
+          <p className="mt-0.5 text-[11px] text-white/80">
+            {moodEmoji(continent.mood)} {moodName(continent.mood, lang)}
+            <span className="text-white/50"> · 🎬 {continent.activity}</span>
           </p>
         </div>
       </div>
